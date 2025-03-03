@@ -47,5 +47,5 @@ class TagFactory extends Factory
         return $this->hasOne(User::class);
     }
 
-    
+        
 }
