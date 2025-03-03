@@ -19,7 +19,7 @@ class ReviewFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->sentence(),
+            'title' => fake()->sentence(3),
             'body' => fake()->paragraph(),
             'rating' => fake()->numberBetween(1, 5),
             'sacredplace_id' => fake()->numberBetween(1, 10),
@@ -30,10 +30,7 @@ class ReviewFactory extends Factory
         ];
     }
 
-    public function run()
-    {
-        Review::factory()->count(10)->create();
-    }
+
 
     public function withSacredplace()
     {

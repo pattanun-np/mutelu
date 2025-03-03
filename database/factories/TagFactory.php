@@ -26,16 +26,6 @@ class TagFactory extends Factory
         ];
     }
 
-    public function run()
-    {
-        Tag::factory()->count(10)->create();
-        $tags = Tag::all();
-        $sacredplaces = Sacredplace::all();
-
-        foreach ($sacredplaces as $sacredplace) {
-            $sacredplace->tags()->attach($tags->random(3));
-        }
-    }
 
     public function withSacredplace()
     {

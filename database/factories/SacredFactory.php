@@ -18,20 +18,13 @@ class SacredFactory extends Factory
     public function definition(): array
     {
         return [
-
-            'name' => fake()->name(),
+            'name' => fake()->sentence(3),
             'description' => fake()->sentence(),
             'image' => fake()->imageUrl(),
             'latitude' => fake()->latitude(),
             'longitude' => fake()->longitude(),
             'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
-            //
         ];
-    }
-
-    public function run()
-    {
-        Sacredplace::factory()->count(10)->create();
     }
 }
