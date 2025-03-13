@@ -13,6 +13,6 @@ class SacredplaceSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Sacredplace::factory()->count(100)->create();
     }
 }

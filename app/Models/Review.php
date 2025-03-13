@@ -12,6 +12,8 @@ class Review extends Model
     use HasFactory;
     protected $fillable = ['title', 'body', 'rating'];
 
+    // cascade delete
+    protected $cascadeDeletes = ['user', 'sacredplace'];
     public function sacredplace()
     {
         return $this->belongsTo(Sacredplace::class);

@@ -12,12 +12,8 @@ class Sacredplace extends Model
     protected $fillable = ['name', 'description', 'image', 'latitude', 'longitude'];
 
 
-
-
-    protected $table = 'sacredplaces';
-
-
-
+    // cascade delete
+    protected $cascadeDeletes = ['tags', 'reviews'];
     public function tags()
     {
         return $this->belongsToMany(Tag::class);

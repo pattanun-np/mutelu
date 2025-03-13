@@ -9,10 +9,15 @@ class Tag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'description',];
 
 
 
-    
+    // cascade delete
+    protected $cascadeDeletes = ['sacredplaces'];
+    public function sacredplaces()
+    {
+        return $this->belongsToMany(Sacredplace::class);
+    }
     //
 }

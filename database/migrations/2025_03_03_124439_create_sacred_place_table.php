@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sacred_place', function (Blueprint $table) {
+        Schema::create('sacredplaces', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->text('description');
@@ -20,7 +20,11 @@ return new class extends Migration
             $table->float('longitude');
             $table->timestamps();
             $table->softDeletes();
-            $table->unique('name');
+            $table->index('name');
+            $table->index('latitude');
+            $table->index('longitude');
+            $table->index('created_at');
+            $table->index('updated_at');
         });
     }
 
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sacred_place');
+        Schema::dropIfExists('sacredplaces');
     }
 };

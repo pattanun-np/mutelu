@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unique(['sacredplace_id', 'user_id']);
             $table->index('sacredplace_id');
             $table->index('user_id');
+            $table->index('title');
         });
     }
 

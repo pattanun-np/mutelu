@@ -33,6 +33,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
+    // cascade delete
+    protected $cascadeDeletes = ['reviews'];
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
     /**
      * Get the attributes that should be cast.
      *
