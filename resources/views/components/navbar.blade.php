@@ -38,7 +38,7 @@
                     >Login</a>
                     <a
                         href="{{ route('register') }}"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+                        class="px-4 py-2 bg-rose-500 text-white rounded-md"
                     >Sign Up</a>
                     @endauth --}}
             </div>

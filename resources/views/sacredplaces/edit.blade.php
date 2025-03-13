@@ -142,7 +142,7 @@
                     </a>
                     <button
                         type="submit"
-                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                        class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600"
                     >
                         Update Sacred Place
                     </button>

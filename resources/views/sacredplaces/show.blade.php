@@ -19,7 +19,7 @@
                         <div class="absolute top-0 right-0 p-4 flex space-x-2">
                             <a
                                 href="{{ route('sacredplaces.edit', $sacredplace) }}"
-                                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                                class="bg-rose-500 text-white px-4 py-2 rounded-lg hover:bg-rose-600"
                             >
                                 Edit
                             </a>
@@ -46,7 +46,7 @@
                         <div class="flex flex-wrap gap-2 mb-4">
                             @if($sacredplace->tags->isNotEmpty())
                                 @foreach($sacredplace->tags as $tag)
-                                    <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">
+                                    <span class="bg-rose-100 text-blue-800 text-sm px-3 py-1 rounded-full">
                                         {{ $tag->name }}
                                     </span>
                                 @endforeach
@@ -124,7 +124,7 @@
                             </a>
                             <a
                                 href="{{ route('sacredplaces.create') }}"
-                                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                                class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600"
                             >
                                 Add New Sacred Place
                             </a>

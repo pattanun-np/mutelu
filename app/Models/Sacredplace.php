@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Str;
 
 class Sacredplace extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['name', 'description', 'image', 'latitude', 'longitude', 'tag_ids'];
+    protected $fillable = ['name', 'description', 'image', 'latitude', 'longitude', 'tag_ids', 'slug'];
 
     // cascade delete
     protected $cascadeDeletes = ['reviews'];
@@ -26,6 +27,48 @@ class Sacredplace extends Model implements HasMedia
     protected $casts = [
         'tag_ids' => 'array',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted()
+    {
+        static::creating(function ($sacredplace) {
+            $sacredplace->generateSlug();
+        });
+
+        static::updating(function ($sacredplace) {
+            // Only regenerate slug if name has changed
+            if ($sacredplace->isDirty('name')) {
+                $sacredplace->generateSlug();
+            }
+        });
+    }
+
+    /**
+     * Generate a unique slug for the sacred place
+     */
+    public function generateSlug()
+    {
+        $slug = Str::slug($this->name);
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Check if the slug already exists
+        while (static::where('slug', $slug)->where('id', '!=', $this->id)->exists()) {
+            $slug = $originalSlug . '-' . $count++;
+        }
+
+        $this->slug = $slug;
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /**
      * Register media collections

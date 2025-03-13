@@ -89,9 +89,9 @@ class SacredPlacesList extends Component
             });
         }
 
-        // Prevent duplicates by using distinct on id
-        $query->select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at', 'updated_at', 'tags')
-            ->distinct('id');
+        // Prevent duplicates by using groupBy instead of distinct
+        $query->select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at', 'updated_at', 'tag_ids', 'slug')
+            ->groupBy('id');
 
         $sacredplaces = $query->paginate($this->perPage);
 
