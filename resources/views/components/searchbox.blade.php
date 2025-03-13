@@ -63,7 +63,7 @@
         lastScrollPosition = scrollTop;
     "
     @click.away="guestPopupOpen = false">
-    <div class="bg-white rounded-full shadow-lg transition-all duration-300 ease-in-out" id="searchbox">
+    <div class="bg-white rounded-full shadow-lg  transition-all duration-300 ease-in-out" id="searchbox">
         <form method="GET" class="flex items-center divide-x divide-gray-200">
             <!-- Location Input -->
             <div class="px-6 py-3 cursor-pointer relative flex-1 min-w-0"
@@ -77,150 +77,9 @@
                 <span class="hidden compact-text text-sm font-medium transition-opacity duration-300">Anywhere</span>
             </div>
 
-            <!-- Check-in Date -->
-            <div class="px-6 py-3 cursor-pointer relative flex-1 min-w-0"
-                @click="activeTab = 'checkin'; guestPopupOpen = false"
-                :class="{ 'bg-gray-100': activeTab === 'checkin' }">
-                <label for="check_in"
-                    class="block text-xs font-bold text-gray-900 mb-1 label-element transition-opacity duration-300">Check
-                    in</label>
-                <input type="date" id="check_in" name="check_in"
-                    class="w-full bg-transparent border-0 p-0 focus:ring-0 text-sm text-gray-600 input-field transition-opacity duration-300"
-                    :class="{ 'font-medium': activeTab === 'checkin' }">
-                <span class="hidden compact-text text-sm font-medium transition-opacity duration-300">Add dates</span>
-            </div>
-
-            <!-- Check-out Date -->
-            <div class="px-6 py-3 cursor-pointer relative flex-1 min-w-0"
-                @click="activeTab = 'checkout'; guestPopupOpen = false"
-                :class="{ 'bg-gray-100': activeTab === 'checkout' }">
-                <label for="check_out"
-                    class="block text-xs font-bold text-gray-900 mb-1 label-element transition-opacity duration-300">Check
-                    out</label>
-                <input type="date" id="check_out" name="check_out"
-                    class="w-full bg-transparent border-0 p-0 focus:ring-0 text-sm text-gray-600 input-field transition-opacity duration-300"
-                    :class="{ 'font-medium': activeTab === 'checkout' }">
-                <span class="hidden compact-text text-sm font-medium transition-opacity duration-300">Add dates</span>
-            </div>
-
             <!-- Guests Selector and Search Button -->
-            <div class="pl-6 pr-2 py-2 flex items-center justify-between rounded-r-full min-w-0 relative"
-                :class="{ 'bg-gray-100': activeTab === 'guests' }">
-                <div class="cursor-pointer pr-2" @click="activeTab = 'guests'; guestPopupOpen = !guestPopupOpen">
-                    <label for="guests"
-                        class="block text-xs font-bold text-gray-900 mb-1 label-element transition-opacity duration-300">Who</label>
-                    <div class="w-full bg-transparent border-0 p-0 text-sm text-gray-600 input-field transition-opacity duration-300"
-                        :class="{ 'font-medium': activeTab === 'guests' }">
-                        <span
-                            x-text="adults + children + infants + pets > 0 ? 
-                            (adults + children + infants + pets) + ' guest' + (adults + children + infants + pets > 1 ? 's' : '') : 
-                            'Add guests'"></span>
-                        <input type="hidden" name="adults" :value="adults">
-                        <input type="hidden" name="children" :value="children">
-                        <input type="hidden" name="infants" :value="infants">
-                        <input type="hidden" name="pets" :value="pets">
-                    </div>
-                    <span class="hidden compact-text text-sm font-medium transition-opacity duration-300">Add
-                        guests</span>
-                </div>
-
-                <!-- Guest Popup -->
-                <div x-show="guestPopupOpen" x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-                    class="absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl p-6 w-80 z-20"
-                    style="display: none;">
-                    <!-- Adults -->
-                    <div class="flex items-center justify-between py-4 border-b border-gray-200">
-                        <div>
-                            <h3 class="text-base font-semibold">Adults</h3>
-                            <p class="text-sm text-gray-500">Ages 13 or above</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 disabled:opacity-50"
-                                :disabled="adults <= 0" @click="adults = Math.max(0, adults - 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            <span class="w-8 text-center" x-text="adults"></span>
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500"
-                                @click="adults++">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Children -->
-                    <div class="flex items-center justify-between py-4 border-b border-gray-200">
-                        <div>
-                            <h3 class="text-base font-semibold">Children</h3>
-                            <p class="text-sm text-gray-500">Ages 2 – 12</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 disabled:opacity-50"
-                                :disabled="children <= 0" @click="children = Math.max(0, children - 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            <span class="w-8 text-center" x-text="children"></span>
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500"
-                                @click="children++">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Infants -->
-                    <div class="flex items-center justify-between py-4 border-b border-gray-200">
-                        <div>
-                            <h3 class="text-base font-semibold">Infants</h3>
-                            <p class="text-sm text-gray-500">Under 2</p>
-                        </div>
-                        <div class="flex items-center">
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 disabled:opacity-50"
-                                :disabled="infants <= 0" @click="infants = Math.max(0, infants - 1)">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                            <span class="w-8 text-center" x-text="infants"></span>
-                            <button type="button"
-                                class="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-500"
-                                @click="infants++">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                                    fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+         
+           
                 <button type="submit"
                     class="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white p-3 rounded-full font-medium flex items-center justify-center transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

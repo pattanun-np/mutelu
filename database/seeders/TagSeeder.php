@@ -13,6 +13,18 @@ class TagSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Tag::create([
+            'name' => 'temple',
+            'description' => 'Buddhist temples',
+        ]);
+        Tag::create([
+            'name' => 'church',
+            'description' => 'Christian churches',
+        ]);
+
+        Tag::create([
+            'name' => 'shrine',
+            'description' => 'Religious shrines',
+        ]);
     }
 }

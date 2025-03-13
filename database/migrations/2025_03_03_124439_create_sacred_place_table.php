@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->float('latitude');
             $table->float('longitude');
+            $table->json('tag_ids')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('name');

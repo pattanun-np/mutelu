@@ -22,6 +22,6 @@ class SupabaseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        
     }
 }

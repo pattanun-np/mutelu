@@ -97,7 +97,10 @@
                 </ul>
             </div>
             <div class="text-left">
-                <h3 class="font-bold text-lg mb-4">MU|Directory</h3>
+                <a
+                    href="{{ route('home') }}"
+                    class="font-bold text-lg mb-4"
+                >MU|Directory</a>
                 <p class="mb-4">Discover sacred places around you.</p>
                 <p>&copy; 2025 MU|Directory. All rights reserved.</p>
             </div>

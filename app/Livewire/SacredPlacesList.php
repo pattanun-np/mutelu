@@ -90,7 +90,7 @@ class SacredPlacesList extends Component
         }
 
         // Prevent duplicates by using distinct on id
-        $query->select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at')
+        $query->select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at', 'updated_at', 'tags')
             ->distinct('id');
 
         $sacredplaces = $query->paginate($this->perPage);

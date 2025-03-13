@@ -9,15 +9,13 @@ class Tag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description',];
+    protected $fillable = ['name', 'description'];
 
-
-
-    // cascade delete
-    protected $cascadeDeletes = ['sacredplaces'];
+    /**
+     * Get all sacred places that have this tag
+     */
     public function sacredplaces()
     {
-        return $this->belongsToMany(Sacredplace::class);
+        return Sacredplace::whereJsonContains('tag_ids', $this->id)->get();
     }
-    //
 }

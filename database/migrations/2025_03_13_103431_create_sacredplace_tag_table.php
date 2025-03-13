@@ -13,12 +13,7 @@ return new class extends Migration
     {
         Schema::create('sacredplace_tag', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sacredplace_id')->constrained()->onDelete('cascade');
-            $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
             $table->timestamps();
-
-            // Add a unique constraint to prevent duplicate entries
-            $table->unique(['sacredplace_id', 'tag_id']);
         });
     }
 

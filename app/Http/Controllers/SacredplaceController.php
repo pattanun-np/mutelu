@@ -20,8 +20,18 @@ class SacredplaceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
+        if ($search) {
+            // If search is provided, show search results view
+            return view('sacredplaces.index', [
+                'search' => $search
+            ]);
+        }
+
+        // Default home view
         return view('home');
     }
 
@@ -32,10 +42,24 @@ class SacredplaceController extends Controller
     {
         $perPage = $request->input('per_page', 12);
         $page = $request->input('page', 1);
+        $search = $request->input('search');
 
-        $sacredplaces = Sacredplace::select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at')
-            ->distinct('id')
-            ->orderBy('created_at', 'desc')
+        $query = Sacredplace::select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at')
+            ->distinct('id');
+
+        // Apply search filter if provided
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    // Search in tags using the tag_ids JSON column
+                    ->orWhereHas('tags', function ($tagQuery) use ($search) {
+                        $tagQuery->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $sacredplaces = $query->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
         return response()->json([
