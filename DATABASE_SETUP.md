@@ -48,6 +48,31 @@ If you prefer to set up the database manually, you can use the SQL statements in
 sqlite3 database/database.sqlite < database/create_tables.sql
 ```
 
+## Image Handling with Spatie Media Library
+
+We've transitioned from storing images directly in the database to using Spatie Media Library. Here are the key changes:
+
+1. **Model Configuration**:
+   - The `Sacredplace` model has been updated to use Spatie Media Library with the `InteractsWithMedia` trait
+   - The `image` field is kept in the `$fillable` array to maintain compatibility with existing code
+
+2. **Seeder Updates**:
+   - The `SacredplaceSeeder` now downloads images from URLs and adds them to sacred places using Spatie Media Library
+   - It sets a default value of 'placeholder.jpg' for the `image` column when creating sacred places
+   - After adding media, it updates the `image` column with the URL from Spatie Media Library
+
+3. **Migration Considerations**:
+   - If you encounter NOT NULL constraint violations on the `image` column, you can either:
+     - Make the `image` column nullable in a migration
+     - Ensure the `image` column always has a value (our current approach)
+
+4. **Benefits**:
+   - Better image management with automatic conversions and responsive images
+   - Improved storage options with configurable disk drivers
+   - Simplified image manipulation and retrieval
+
+For more details on how to use Spatie Media Library in your application, refer to the [official documentation](https://spatie.be/docs/laravel-medialibrary/v10/introduction).
+
 ## Troubleshooting
 
 If you encounter issues:

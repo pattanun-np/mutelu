@@ -16,11 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-
-
         $this->call([
-            TagSeeder::class,
+            TagSeeder::class, // Tags are now created in SacredplaceSeeder
             SacredplaceSeeder::class,
             UserSeeder::class,
             ReviewSeeder::class,

@@ -17,7 +17,7 @@ class Sacredplace extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = ['name', 'description', 'latitude', 'longitude', 'tag_ids'];
+    protected $fillable = ['name', 'description', 'image', 'latitude', 'longitude', 'tag_ids'];
 
     // cascade delete
     protected $cascadeDeletes = ['reviews'];

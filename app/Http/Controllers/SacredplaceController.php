@@ -56,7 +56,13 @@ class SacredplaceController extends Controller
 
         // Add image URLs to the response
         $sacredplaces->getCollection()->transform(function ($sacredplace) {
-            $sacredplace->image = $sacredplace->image;
+            // Try to get the image from Spatie Media Library first
+            if ($sacredplace->hasMedia('images')) {
+                $sacredplace->image = $sacredplace->getFirstMediaUrl('images');
+            } else {
+                // Fallback to the image column value
+                $sacredplace->image = $sacredplace->image;
+            }
             return $sacredplace;
         });
 
