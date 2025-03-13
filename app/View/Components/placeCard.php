@@ -10,7 +10,6 @@ use Illuminate\View\Component;
 class PlaceCard extends Component
 {
     public $place;
-    public $imageIndex = 0;
     public $filteredImages = [];
 
     /**
@@ -20,16 +19,13 @@ class PlaceCard extends Component
     {
         $this->place = $place;
 
-        // Check if the place has an image relationship
+        // Process images immediately instead of deferring
         if (method_exists($place, 'images') && $place->images) {
-            // If there's an images relationship, use it
             $this->filteredImages = $place->images->pluck('url')->toArray();
-        } else if ($place->image) {
-            // Otherwise use the single image field
+        } elseif ($place->image) {
             $this->filteredImages = [$place->image];
         }
 
-        // If no images, use a placeholder
         if (empty($this->filteredImages)) {
             $this->filteredImages = ['/images/placeholder.jpg'];
         }

@@ -9,4 +9,5 @@ Route::get('/', [SacredplaceController::class, 'index'])->name('home');
 
 Route::get('/api/sacredplaces', [SacredplaceController::class, 'apiIndex'])->name('api.sacredplaces');
 
-Route::get('/sacredplaces/{sacredplace}', [SacredplaceController::class, 'show'])->name('sacredplaces.show');
+// CRUD routes for sacred places
+Route::resource('sacredplaces', SacredplaceController::class);

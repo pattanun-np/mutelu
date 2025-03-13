@@ -1,17 +1,26 @@
 <div
-    class="h-full rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 bg-white place-card">
+    class="h-full rounded-xl overflow-hidden shadow-sm hover:shadow-md transition duration-300 bg-white">
     <a
         href="{{ route('sacredplaces.show', $place->id) }}"
         class="block h-full flex flex-col"
     >
         <div class="relative pt-[66.67%] overflow-hidden bg-gray-100">
-            <img
-                src="{{ $filteredImages[0] }}"
-                alt="{{ $place->name }}"
-                class="absolute inset-0 w-full h-full object-cover transition duration-300 hover:scale-105"
-                loading="lazy"
-                onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
-            >
+            @if(isset($place->image) && $place->image)
+                <img
+                    src="{{ $place->image }}"
+                    alt="{{ $place->name }}"
+                    class="absolute inset-0 w-full h-full object-cover transition duration-300 hover:scale-105"
+                    loading="lazy"
+                    onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
+                >
+            @else
+                <img
+                    src="/images/placeholder.jpg"
+                    alt="{{ $place->name }}"
+                    class="absolute inset-0 w-full h-full object-cover transition duration-300 hover:scale-105"
+                    loading="lazy"
+                >
+            @endif
         </div>
         <div class="p-4 flex-grow flex flex-col">
             <h3 class="font-semibold text-lg text-gray-900 mb-1 line-clamp-1">

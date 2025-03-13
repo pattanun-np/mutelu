@@ -233,6 +233,120 @@
         rel="stylesheet"
     >
     @stack('styles')
+    <!-- Livewire Styles -->
+    @livewireStyles
+    
+    <!-- Custom styles for preventing layout shifts -->
+    <style>
+        /* Filter pill styling */
+        .filter-pill {
+            @apply bg-gray-100 border border-gray-200 rounded-full px-4 py-2 text-sm whitespace-nowrap cursor-pointer transition-all duration-200;
+        }
+    
+        .filter-pill:hover {
+            @apply bg-gray-200;
+        }
+    
+        /* Hide scrollbar but allow scrolling */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    
+        /* Ensure images load smoothly */
+        img {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+    
+        img[loading] {
+            opacity: 0;
+        }
+    
+        /* Prevent content jumping */
+        .min-h-card {
+            min-height: 350px;
+        }
+    
+        /* Prevent layout shifts with smooth transitions */
+        .sacred-places-grid {
+            transition: height 0.3s ease-out;
+        }
+    
+        /* Hide scrollbar but allow scrolling */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+    
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    
+        /* Ensure images load smoothly */
+        img {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+    
+        img.loaded,
+        img[src] {
+            opacity: 1;
+        }
+    
+        /* Loading indicator */
+        #loading-more-indicator {
+            transition: opacity 0.3s ease;
+        }
+    
+        #loading-more-indicator.loading {
+            opacity: 1;
+        }
+    
+        /* Filter pill styling */
+        .filter-pill {
+            background-color: #f7f7f7;
+            border: 1px solid #EBEBEB;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+    
+        .filter-pill:hover {
+            background-color: #DDDDDD;
+        }
+    
+        /* Hide skeleton loaders - more aggressive approach */
+        [wire\:loading],
+        [wire\:loading\.delay],
+        div[wire\:loading],
+        div[wire\:loading\.delay],
+        *[wire\:loading],
+        *[wire\:loading\.delay],
+        .animate-pulse,
+        [class*="animate-pulse"],
+        div.animate-pulse,
+        *[class*="animate-pulse"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            z-index: -9999 !important;
+        }
+    </style>
 </head>
 
 <body
@@ -310,6 +424,135 @@
         }
     </style>
     
+    <!-- Livewire Scripts -->
+    @livewireScripts
+    
+    <!-- Script to handle image loading smoothly -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Remove all skeleton loaders immediately
+            removeSkeletonLoaders();
+
+            // Handle image loading
+            handleImages();
+
+            // Listen for Livewire events
+            document.addEventListener('livewire:initialized', () => {
+                // Handle when new items are loaded
+                Livewire.on('items-loaded', () => {
+                    console.log('Items loaded, refreshing images');
+                    setTimeout(() => {
+                        removeSkeletonLoaders();
+                        handleImages();
+                    }, 100);
+                });
+
+                // Handle when loading state changes
+                Livewire.on('setLoadingMoreFalse', () => {
+                    console.log('Setting loadingMore to false');
+                    setTimeout(() => {
+                        removeSkeletonLoaders();
+                    }, 100);
+                });
+            });
+
+            function handleImages() {
+                // Find all lazy-loaded images
+                const images = document.querySelectorAll('img[loading="lazy"]');
+
+                images.forEach(img => {
+                    // If image is already loaded
+                    if (img.complete) {
+                        img.style.opacity = '1';
+                    } else {
+                        // Add loaded class when image loads
+                        img.addEventListener('load', function () {
+                            img.style.opacity = '1';
+                        });
+
+                        // Handle error case
+                        img.addEventListener('error', function () {
+                            if (img.src !== '/images/placeholder.jpg') {
+                                img.src = '/images/placeholder.jpg';
+                            }
+                            img.style.opacity = '1';
+                        });
+                    }
+                });
+
+                // Remove any skeleton loaders
+                removeSkeletonLoaders();
+            }
+
+            function removeSkeletonLoaders() {
+                // Remove any skeleton loaders that might be visible
+                const skeletonSelectors = [
+                    '[wire\\:loading]',
+                    '[wire\\:loading\\.delay]',
+                    '.animate-pulse',
+                    '[class*="animate-pulse"]'
+                ];
+
+                skeletonSelectors.forEach(selector => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.pointerEvents = 'none';
+                        el.style.position = 'absolute';
+                        el.style.left = '-9999px';
+                        el.style.height = '0';
+                        el.style.width = '0';
+                        el.style.overflow = 'hidden';
+
+                        // Remove the element from the DOM
+                        if (el.parentNode) {
+                            el.parentNode.removeChild(el);
+                        }
+                    });
+                });
+
+                // Make sure content is visible
+                document.querySelectorAll('[wire\\:loading\\.remove]').forEach(el => {
+                    el.style.display = 'block';
+                    el.style.visibility = 'visible';
+                    el.style.opacity = '1';
+                });
+            }
+
+            // Force remove skeleton loaders every 500ms
+            setInterval(function () {
+                removeSkeletonLoaders();
+
+                // Check if we need to load more items
+                const loadingIndicator = document.getElementById('loading-indicator');
+                if (loadingIndicator) {
+                    const rect = loadingIndicator.getBoundingClientRect();
+                    const isVisible = (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                    );
+
+                    if (isVisible) {
+                        console.log('Loading indicator is visible, checking if we need to load more items');
+                        // Check if we need to load more items
+                        if (window.Livewire) {
+                            const component = window.Livewire.find(
+                                document.querySelector('[wire\\:id]').getAttribute('wire:id')
+                            );
+
+                            if (component && !component.loadingMore && component.hasMorePages) {
+                                console.log('Loading more items from interval check');
+                                component.loadMore();
+                            }
+                        }
+                    }
+                }
+            }, 500);
+        });
+    </script>
     @stack('scripts')
 </body>
 

@@ -1,5 +1,7 @@
-<div>
-    <div class="filters-bar mb-6 py-4 flex overflow-x-auto gap-3">
+<div class="w-full">
+    <!-- Filters bar -->
+    <div
+        class="sticky top-0 bg-white py-4 z-10 flex overflow-x-auto gap-3 scrollbar-hide mb-6 border-b border-gray-200">
         <button
             wire:click="clearFilters"
             class="filter-pill {{ empty($activeFilters) || !is_array($activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
@@ -51,39 +53,44 @@
         </button>
     </div>
 
-    <div class="sacred-places-grid">
+    <!-- Grid layout -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[300px]">
         @foreach($sacredplaces as $place)
-            <div class="place-card-wrapper">
-                <x-place-card :place="$place" />
+            <div class="h-full">
+                <!-- Use the static component instead of the regular one -->
+                <x-place-card-static :place="$place" />
             </div>
         @endforeach
     </div>
 
+    <!-- Simple loading indicator -->
     <div
         x-data="{
             observe() {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            @this.loadMore()
+                        if (entry.isIntersecting && !$wire.loadingMore) {
+                        console.log('Loading more items...');
+                        $wire.loadMore();
                         }
-                    })
+                    });
                 }, {
                     root: null,
-                    rootMargin: '0px',
-                    threshold: 0.5
-                })
+                    rootMargin: '200px',
+                    threshold: 0.1
+                    });
                 
-                observer.observe(this.$el)
+                observer.observe(this.$el);
             }
         }"
         x-init="observe"
-        class="loading-indicator flex justify-center py-6"
+        class="h-20 flex items-center justify-center my-8"
+        id="loading-indicator"
     >
         @if($loadingMore)
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2 bg-white py-2 px-4 rounded-full shadow-sm">
                 <svg
-                    class="animate-spin h-5 w-5 text-gray-500"
+                    class="animate-spin h-5 w-5 text-primary"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -107,7 +114,7 @@
         @elseif(!$hasMorePages)
             <div class="text-gray-500">No more places to show</div>
         @else
-            <div class="h-8 w-full"></div>
+            <div class="text-gray-400">Scroll for more</div>
         @endif
     </div>
 </div>

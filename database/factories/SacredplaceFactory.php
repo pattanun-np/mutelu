@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Sacredplace;
 
-class SacredPlaceFactory extends Factory
+class SacredplaceFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
