@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Sacredplace extends Model
+class Sacredplace extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
 
-    protected $fillable = ['name', 'description', 'image', 'latitude', 'longitude', 'tag_ids'];
+    protected $fillable = ['name', 'description', 'latitude', 'longitude', 'tag_ids'];
 
     // cascade delete
     protected $cascadeDeletes = ['reviews'];
@@ -22,6 +26,51 @@ class Sacredplace extends Model
     protected $casts = [
         'tag_ids' => 'array',
     ];
+
+    /**
+     * Register media collections
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images')
+            ->singleFile()
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('thumb')
+                    ->width(200)
+                    ->height(200);
+
+                $this->addMediaConversion('medium')
+                    ->width(600)
+                    ->height(400);
+            });
+    }
+
+    /**
+     * Get the image URL attribute
+     */
+    public function getImageAttribute()
+    {
+        $media = $this->getFirstMedia('images');
+        return $media ? $media->getUrl() : null;
+    }
+
+    /**
+     * Get the thumbnail URL attribute
+     */
+    public function getThumbAttribute()
+    {
+        $media = $this->getFirstMedia('images');
+        return $media ? $media->getUrl('thumb') : null;
+    }
+
+    /**
+     * Get the medium image URL attribute
+     */
+    public function getMediumImageAttribute()
+    {
+        $media = $this->getFirstMedia('images');
+        return $media ? $media->getUrl('medium') : null;
+    }
 
     /**
      * Get the tags attribute

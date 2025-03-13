@@ -4,19 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Sacredplace;
 use App\Models\Tag;
-use App\Services\SupabaseStorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SacredplaceController extends Controller
 {
-    protected $supabaseStorage;
-
-    public function __construct(SupabaseStorageService $supabaseStorage)
-    {
-        $this->supabaseStorage = $supabaseStorage;
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -44,7 +36,7 @@ class SacredplaceController extends Controller
         $page = $request->input('page', 1);
         $search = $request->input('search');
 
-        $query = Sacredplace::select('id', 'name', 'description', 'image', 'latitude', 'longitude', 'created_at')
+        $query = Sacredplace::select('id', 'name', 'description', 'latitude', 'longitude', 'created_at')
             ->distinct('id');
 
         // Apply search filter if provided
@@ -61,6 +53,12 @@ class SacredplaceController extends Controller
 
         $sacredplaces = $query->orderBy('created_at', 'desc')
             ->paginate($perPage);
+
+        // Add image URLs to the response
+        $sacredplaces->getCollection()->transform(function ($sacredplace) {
+            $sacredplace->image = $sacredplace->image;
+            return $sacredplace;
+        });
 
         return response()->json([
             'data' => $sacredplaces->items(),
@@ -92,25 +90,23 @@ class SacredplaceController extends Controller
             'tags' => 'array',
         ]);
 
-        // Handle image upload to Supabase
-        $imageUrl = $this->supabaseStorage->upload($request->file('image'), 'sacredplaces');
-
-        if (!$imageUrl) {
-            return back()->withErrors(['image' => 'Failed to upload image to Supabase.'])->withInput();
-        }
-
-        // Create the sacred place
+        // Create the sacred place without the image
         $sacredplace = Sacredplace::create([
             'name' => $validated['name'],
             'description' => $validated['description'],
-            'image' => $imageUrl,
             'latitude' => $validated['latitude'],
             'longitude' => $validated['longitude'],
         ]);
 
+        // Add the image using Spatie Media Library
+        if ($request->hasFile('image')) {
+            $sacredplace->addMediaFromRequest('image')
+                ->toMediaCollection('images');
+        }
+
         // Attach tags if any
         if ($request->has('tags')) {
-            $sacredplace->tags()->attach($request->tags);
+            $sacredplace->syncTags($request->tags);
         }
 
         return redirect()->route('sacredplaces.show', $sacredplace)
@@ -151,35 +147,25 @@ class SacredplaceController extends Controller
         ]);
 
         // Update sacred place data
-        $sacredplace->name = $validated['name'];
-        $sacredplace->description = $validated['description'];
-        $sacredplace->latitude = $validated['latitude'];
-        $sacredplace->longitude = $validated['longitude'];
+        $sacredplace->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
+        ]);
 
         // Handle image update if a new one is provided
         if ($request->hasFile('image')) {
-            // Delete old image from Supabase if it exists
-            if ($sacredplace->image) {
-                $this->supabaseStorage->delete($sacredplace->image);
-            }
-
-            // Upload new image to Supabase
-            $imageUrl = $this->supabaseStorage->upload($request->file('image'), 'sacredplaces');
-
-            if (!$imageUrl) {
-                return back()->withErrors(['image' => 'Failed to upload image to Supabase.'])->withInput();
-            }
-
-            $sacredplace->image = $imageUrl;
+            // This will automatically replace the existing media
+            $sacredplace->addMediaFromRequest('image')
+                ->toMediaCollection('images');
         }
-
-        $sacredplace->save();
 
         // Sync tags
         if ($request->has('tags')) {
-            $sacredplace->tags()->sync($request->tags);
+            $sacredplace->syncTags($request->tags);
         } else {
-            $sacredplace->tags()->detach();
+            $sacredplace->syncTags([]);
         }
 
         return redirect()->route('sacredplaces.show', $sacredplace)
@@ -191,12 +177,7 @@ class SacredplaceController extends Controller
      */
     public function destroy(Sacredplace $sacredplace)
     {
-        // Delete the image from Supabase if it exists
-        if ($sacredplace->image) {
-            $this->supabaseStorage->delete($sacredplace->image);
-        }
-
-        // Delete the sacred place (will cascade to related records)
+        // Delete the sacred place (will cascade to related records including media)
         $sacredplace->delete();
 
         return redirect()->route('home')

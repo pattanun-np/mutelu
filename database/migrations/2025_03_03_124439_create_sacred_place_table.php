@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('latitude');
             $table->float('longitude');
             $table->json('tag_ids')->nullable();
+            $table->json('tags')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index('name');
@@ -26,6 +27,8 @@ return new class extends Migration
             $table->index('longitude');
             $table->index('created_at');
             $table->index('updated_at');
+            $table->index('tag_ids');
+            $table->index('tags');
         });
     }
 

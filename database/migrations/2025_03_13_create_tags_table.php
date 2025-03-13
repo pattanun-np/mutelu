@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->json('sacredplaces')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            $table->unique('name');
             $table->index('name');
+            $table->index('sacredplaces');
         });
     }
 

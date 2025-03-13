@@ -359,10 +359,6 @@
     <div class="page-wrapper flex flex-col min-h-screen">
         @include('components.navbar')
 
-        @if(Route::is('home') || Route::is('sacredplaces.index'))
-            @include('components.search-box')
-        @endif
-
         <main class="flex-grow motion-section">
             @yield('content')
         </main>
