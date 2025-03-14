@@ -30,7 +30,7 @@
                         name="email"
                         id="email"
                         value="{{ old('email') }}"
-                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-rose-500 focus:ring focus:ring-rose-200 focus:ring-opacity-50 @error('email') border-red-500 @enderror"
+                        class="w-full rounded-lg  shadow-sm focus:border-rose-500 focus:ring focus:ring-rose-200 focus:ring-opacity-50 @error('email') border-red-500 @enderror"
                         required
                         autocomplete="email"
                         autofocus

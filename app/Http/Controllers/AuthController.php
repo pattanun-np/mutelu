@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+
 class AuthController extends Controller
 {
     /**
      * Show the login form.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function showLoginForm()
     {
@@ -40,26 +41,25 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            // Store user ID in session
-            session()->put('user_id', $user->id);
-            session()->put('user_name', $user->name);
-            session()->put('user_email', $user->email);
-
-            // Redirect to intended URL or home
-            $intended = session()->get('url.intended', '/');
-            return redirect($intended);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        // Log the user in by storing user data in the session
+        session()->put('user_id', $user->id);
+        session()->put('user_name', $user->name);
+        session()->put('user_email', $user->email);
+
+        // Redirect to intended URL or home
+        return redirect()->intended('/');
     }
 
     /**
      * Show the registration form.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
     public function showRegistrationForm()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use App\Models\Sacredplace;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -34,8 +35,7 @@ class ReviewController extends Controller
     public function create(Request $request)
     {
         // Check if user is authenticated
-        if (!session()->has('user_id')) {
-            session()->put('url.intended', url()->current());
+        if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'You must be logged in to write a review.');
         }
 
