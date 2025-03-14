@@ -13,6 +13,10 @@
         name="csrf-token"
         content="{{ csrf_token() }}"
     >
+    <!-- Ensure CSRF token is available for JavaScript -->
+    <script>
+        window.Laravel = {!! json_encode(['csrfToken' => csrf_token()]) !!};
+    </script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
     <script>
@@ -49,6 +53,20 @@
     <!-- Alpine JS -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
     
+    <!-- Ensure Alpine.js is loaded -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof Alpine === 'undefined') {
+                console.error('Alpine.js is not loaded properly');
+                // Try to load Alpine.js again
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js';
+                document.head.appendChild(script);
+            } else {
+                console.log('Alpine.js is loaded properly');
+            }
+        });
+    </script>
     <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
     
@@ -364,6 +382,22 @@
         </main>
 
         @include('components.footer')
+@if(session()->has('user_id'))
+    <div class="fixed bottom-4 right-4">
+        <form
+            action="{{ route('logout') }}"
+            method="POST"
+        >
+            @csrf
+            <button
+                type="submit"
+                class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors"
+            >
+                Logout
+            </button>
+        </form>
+    </div>
+@endif
     </div>
     
     <!-- Animation helper classes -->

@@ -78,6 +78,12 @@ class SacredplaceController extends Controller
      */
     public function create()
     {
+        // Check if user is authenticated
+        if (!session()->has('user_id')) {
+            session()->put('url.intended', url()->current());
+            return redirect()->route('login')->with('error', 'You must be logged in to create a sacred place.');
+        }
+
         $tags = Tag::all();
         return view('sacredplaces.create', compact('tags'));
     }
@@ -87,6 +93,11 @@ class SacredplaceController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if user is authenticated
+        if (!session()->has('user_id')) {
+            return redirect()->route('login')->with('error', 'You must be logged in to create a sacred place.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -125,6 +136,9 @@ class SacredplaceController extends Controller
      */
     public function show(Sacredplace $sacredplace)
     {
+        // Eager load reviews with their users to avoid N+1 query problem
+        $sacredplace->load(['reviews.user']);
+
         return view('sacredplaces.show', compact('sacredplace'));
     }
 
@@ -133,6 +147,12 @@ class SacredplaceController extends Controller
      */
     public function edit(Sacredplace $sacredplace)
     {
+        // Check if user is authenticated
+        if (!session()->has('user_id')) {
+            session()->put('url.intended', url()->current());
+            return redirect()->route('login')->with('error', 'You must be logged in to edit a sacred place.');
+        }
+
         $tags = Tag::all();
         $selectedTags = $sacredplace->tags->pluck('id')->toArray();
 
@@ -144,6 +164,11 @@ class SacredplaceController extends Controller
      */
     public function update(Request $request, Sacredplace $sacredplace)
     {
+        // Check if user is authenticated
+        if (!session()->has('user_id')) {
+            return redirect()->route('login')->with('error', 'You must be logged in to update a sacred place.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -185,6 +210,11 @@ class SacredplaceController extends Controller
      */
     public function destroy(Sacredplace $sacredplace)
     {
+        // Check if user is authenticated
+        if (!session()->has('user_id')) {
+            return redirect()->route('login')->with('error', 'You must be logged in to delete a sacred place.');
+        }
+
         // Delete the sacred place (will cascade to related records including media)
         $sacredplace->delete();
 
