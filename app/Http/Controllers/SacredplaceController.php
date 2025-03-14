@@ -17,7 +17,7 @@ class SacredplaceController extends Controller
         $search = $request->input('search');
 
         if ($search) {
-            // If search is provided, show search results view
+            // If search is provided, show search results view with search parameter
             return view('sacredplaces.index', [
                 'search' => $search
             ]);
@@ -43,11 +43,15 @@ class SacredplaceController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    // Search in tags using the tag_ids JSON column
-                    ->orWhereHas('tags', function ($tagQuery) use ($search) {
-                        $tagQuery->where('name', 'like', "%{$search}%");
-                    });
+                    ->orWhere('description', 'like', "%{$search}%");
+
+                // Instead of using orWhereHas, we'll use a subquery to search tags
+                $tagIds = Tag::where('name', 'like', "%{$search}%")->pluck('id')->toArray();
+                if (!empty($tagIds)) {
+                    foreach ($tagIds as $tagId) {
+                        $q->orWhereJsonContains('tag_ids', $tagId);
+                    }
+                }
             });
         }
 

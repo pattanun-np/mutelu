@@ -13,6 +13,7 @@
             method="GET"
             action="{{ route('sacredplaces.index') }}"
             class="flex items-center"
+            @submit="if (typeof Livewire !== 'undefined' && document.querySelector('[wire\\:id]')) { Livewire.dispatch('searchUpdated', searchQuery); }"
         >
             <!-- Search Input -->
             <div class="px-4 py-2 cursor-pointer relative flex-1 min-w-0 flex items-center">

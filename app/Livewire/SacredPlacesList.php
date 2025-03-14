@@ -16,14 +16,20 @@ class SacredPlacesList extends Component
     public $hasMorePages = true;
     public $loadingMore = false;
     public $activeFilters = [];
+    public $search = '';
 
-    protected $listeners = ['loadMore', 'filterChanged'];
+    protected $listeners = ['loadMore', 'filterChanged', 'searchUpdated'];
 
-    public function mount()
+    public function mount($search = null)
     {
         // Ensure activeFilters is always an array
         if (!is_array($this->activeFilters)) {
             $this->activeFilters = [];
+        }
+
+        // Set search parameter if provided
+        if ($search) {
+            $this->search = $search;
         }
     }
 
@@ -59,6 +65,12 @@ class SacredPlacesList extends Component
         $this->dispatch('filtersUpdated');
     }
 
+    public function searchUpdated($searchTerm)
+    {
+        $this->search = $searchTerm;
+        $this->resetPage();
+    }
+
     public function loadMore()
     {
         if ($this->hasMorePages && !$this->loadingMore) {
@@ -85,6 +97,22 @@ class SacredPlacesList extends Component
     public function render()
     {
         $query = Sacredplace::orderBy('created_at', 'desc');
+
+        // Apply search filter if provided
+        if (!empty($this->search)) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('description', 'like', "%{$this->search}%");
+
+                // Instead of using orWhereHas, we'll use a subquery to search tags
+                $tagIds = Tag::where('name', 'like', "%{$this->search}%")->pluck('id')->toArray();
+                if (!empty($tagIds)) {
+                    foreach ($tagIds as $tagId) {
+                        $q->orWhereJsonContains('tag_ids', $tagId);
+                    }
+                }
+            });
+        }
 
         // Apply filters if any are active
         if (!empty($this->activeFilters) && is_array($this->activeFilters)) {
