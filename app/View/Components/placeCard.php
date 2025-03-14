@@ -27,7 +27,7 @@ class PlaceCard extends Component
         }
 
         if (empty($this->filteredImages)) {
-            $this->filteredImages = ['/images/placeholder.jpg'];
+            $this->filteredImages = ['/images/placeholder.png'];
         }
     }
 

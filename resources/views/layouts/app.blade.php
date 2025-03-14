@@ -284,6 +284,22 @@
         img[loading] {
             opacity: 0;
         }
+        
+        /* Skeleton loader styles */
+        .skeleton-loader {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
     
         /* Prevent content jumping */
         .min-h-card {
@@ -382,22 +398,7 @@
         </main>
 
         @include('components.footer')
-@if(session()->has('user_id'))
-    <div class="fixed bottom-4 right-4">
-        <form
-            action="{{ route('logout') }}"
-            method="POST"
-        >
-            @csrf
-            <button
-                type="submit"
-                class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors"
-            >
-                Logout
-            </button>
-        </form>
-    </div>
-@endif
+
     </div>
     
     <!-- Animation helper classes -->
@@ -498,18 +499,33 @@
                     // If image is already loaded
                     if (img.complete) {
                         img.style.opacity = '1';
+                        // Hide the skeleton loader
+                        const skeletonLoader = img.previousElementSibling;
+                        if (skeletonLoader && skeletonLoader.classList.contains('skeleton-loader')) {
+                            skeletonLoader.classList.add('hidden');
+                        }
                     } else {
                         // Add loaded class when image loads
                         img.addEventListener('load', function () {
                             img.style.opacity = '1';
+                            // Hide the skeleton loader
+                            const skeletonLoader = img.previousElementSibling;
+                            if (skeletonLoader && skeletonLoader.classList.contains('skeleton-loader')) {
+                                skeletonLoader.classList.add('hidden');
+                            }
                         });
 
                         // Handle error case
                         img.addEventListener('error', function () {
-                            if (img.src !== '/images/placeholder.jpg') {
-                                img.src = '/images/placeholder.jpg';
+                            if (img.src !== '/images/placeholder.png') {
+                                img.src = '/images/placeholder.png';
                             }
                             img.style.opacity = '1';
+                            // Hide the skeleton loader
+                            const skeletonLoader = img.previousElementSibling;
+                            if (skeletonLoader && skeletonLoader.classList.contains('skeleton-loader')) {
+                                skeletonLoader.classList.add('hidden');
+                            }
                         });
                     }
                 });

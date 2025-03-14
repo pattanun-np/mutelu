@@ -5,20 +5,40 @@
         class="block h-full flex flex-col"
     >
         <div class="relative pt-[75%] overflow-hidden bg-gray-100 rounded-t-xl">
+            <!-- Skeleton loader that will be hidden when image loads -->
+            <div class="skeleton-loader absolute inset-0 w-full h-full bg-gray-200 animate-pulse">
+                <div class="h-full w-full flex items-center justify-center">
+                    <svg
+                        class="w-12 h-12 text-gray-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                    </svg>
+                </div>
+            </div>
             @if(isset($place->image) && $place->image)
                 <img
                     src="{{ $place->image }}"
                     alt="{{ $place->name }}"
-                    class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                    class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105 opacity-0"
                     loading="lazy"
-                    onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
+                    onerror="this.onerror=null; this.src='/images/placeholder.png'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"
+                    onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"
                 >
             @else
                 <img
-                    src="/images/placeholder.jpg"
+                    src="/images/placeholder.png"
                     alt="{{ $place->name }}"
-                    class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                    class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105 opacity-0"
                     loading="lazy"
+                    onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"
                 >
             @endif
             <button class="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white shadow-sm">

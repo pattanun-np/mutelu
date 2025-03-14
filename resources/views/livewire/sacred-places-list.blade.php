@@ -1,4 +1,12 @@
 <div class="w-full">
+    {{-- <!-- Debug section (only visible in development) -->
+    @if(config('app.debug'))
+    <div class="bg-gray-100 p-4 mb-4 rounded-lg">
+        <h3 class="font-semibold text-gray-700">Debug Info:</h3>
+        <p>Active Filters: {{ implode(', ', $activeFilters) }}</p>
+    </div>
+    @endif --}}
+
     <!-- Filters bar -->
   
 
@@ -10,6 +18,49 @@
                 <x-place-card-static :place="$place" />
             </div>
         @endforeach
+        <!-- Skeleton loaders for upcoming items -->
+        @if($loadingMore)
+            @for($i = 0; $i < 4; $i++)
+                <div class="h-full">
+                    <div class="group h-full rounded-xl overflow-hidden shadow-sm bg-white">
+                        <div class="relative pt-[75%] overflow-hidden bg-gray-100 rounded-t-xl">
+                            <div class="skeleton-loader absolute inset-0 w-full h-full bg-gray-200 animate-pulse">
+                                <div class="h-full w-full flex items-center justify-center">
+                                    <svg
+                                        class="w-12 h-12 text-gray-300"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="1"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col">
+                            <div class="flex justify-between items-start mb-1">
+                                <div class="h-6 w-3/4 bg-gray-200 animate-pulse rounded"></div>
+                                <div class="h-4 w-10 bg-gray-200 animate-pulse rounded"></div>
+                            </div>
+                            <div class="h-4 w-1/2 bg-gray-200 animate-pulse rounded mb-2 mt-1"></div>
+                            <div class="h-4 w-full bg-gray-200 animate-pulse rounded mb-1"></div>
+                            <div class="h-4 w-2/3 bg-gray-200 animate-pulse rounded mb-2"></div>
+                            <div class="mt-auto pt-2 border-t border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="h-4 w-1/3 bg-gray-200 animate-pulse rounded"></div>
+                                    <div class="h-4 w-1/4 bg-gray-200 animate-pulse rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
+        @endif
     </div>
 
     <!-- Simple loading indicator -->
@@ -101,16 +152,94 @@
 <script>
     document.addEventListener('livewire:initialized', () => {
         // Handle filter button clicks from the parent component
-        const filterButtons = document.querySelectorAll('[data-filter]');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const activeFiltersCount = document.getElementById('active-filters-count');
+
+        // Function to update button styles based on active filters
+        function updateFilterButtonStyles() {
+            filterButtons.forEach(button => {
+                const filter = button.getAttribute('data-filter');
+
+                // Reset all buttons to default style
+                button.classList.remove('bg-gray-900', 'text-white');
+                button.classList.add('bg-white', 'text-gray-800');
+
+                // Handle the "All Places" button
+                if (filter === 'all' && @this.activeFilters.length === 0) {
+                    button.classList.remove('bg-white', 'text-gray-800');
+                    button.classList.add('bg-gray-900', 'text-white');
+                }
+                // Handle tag filter buttons
+                else if (filter !== 'all' && @this.activeFilters.includes(filter)) {
+                    button.classList.remove('bg-white', 'text-gray-800');
+                    button.classList.add('bg-gray-900', 'text-white');
+                }
+            });
+
+            // Update active filters count
+            if (activeFiltersCount) {
+                if (@this.activeFilters.length > 0) {
+                    activeFiltersCount.textContent = @this.activeFilters.length;
+                    activeFiltersCount.classList.remove('hidden');
+                } else {
+                    activeFiltersCount.classList.add('hidden');
+                }
+            }
+        }
+
+        // Initial update of button styles
+        updateFilterButtonStyles();
+
+        // Listen for filter changes
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const filter = button.getAttribute('data-filter');
+                
                 if (filter === 'all') {
                     @this.clearFilters();
                 } else {
                     @this.toggleFilter(filter);
                 }
+
+                // Update button styles after a short delay to allow Livewire to update
+                setTimeout(updateFilterButtonStyles, 100);
             });
+        });
+
+        // Handle the clear filters button
+        const clearFiltersButton = document.getElementById('clear-filters');
+        if (clearFiltersButton) {
+            clearFiltersButton.addEventListener('click', () => {
+                @this.clearFilters();
+                setTimeout(updateFilterButtonStyles, 100);
+            });
+        }
+
+        // Listen for Livewire updates
+        Livewire.on('filtersUpdated', () => {
+            updateFilterButtonStyles();
+        });
+
+        // Handle image loading
+        function initializeImageLoaders() {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                if (img.complete) {
+                    img.classList.remove('opacity-0');
+                    const skeletonLoader = img.previousElementSibling;
+                    if (skeletonLoader && skeletonLoader.classList.contains('skeleton-loader')) {
+                        skeletonLoader.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        // Initialize image loaders on page load
+        initializeImageLoaders();
+
+        // Initialize image loaders when new items are loaded
+        Livewire.on('items-loaded', () => {
+            setTimeout(initializeImageLoaders, 100);
         });
     });
 </script>

@@ -123,7 +123,7 @@ class SacredplaceSeeder extends Seeder
                 'description' => $placeData['description'],
                 'latitude' => $placeData['latitude'],
                 'longitude' => $placeData['longitude'],
-                'image' => 'placeholder.jpg', // Add a default value for the image column
+                'image' => 'placeholder.png', // Add a default value for the image column
             ]);
 
             // Download and add the image
@@ -180,7 +180,7 @@ class SacredplaceSeeder extends Seeder
                 'description' => $description,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
-                'image' => 'placeholder.jpg', // Add a default value for the image column
+                'image' => 'placeholder.png', // Add a default value for the image column
             ]);
 
             // Download and add the image

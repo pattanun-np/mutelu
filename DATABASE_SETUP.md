@@ -58,7 +58,7 @@ We've transitioned from storing images directly in the database to using Spatie 
 
 2. **Seeder Updates**:
    - The `SacredplaceSeeder` now downloads images from URLs and adds them to sacred places using Spatie Media Library
-   - It sets a default value of 'placeholder.jpg' for the `image` column when creating sacred places
+   - It sets a default value of 'placeholder.png' for the `image` column when creating sacred places
    - After adding media, it updates the `image` column with the URL from Spatie Media Library
 
 3. **Migration Considerations**:

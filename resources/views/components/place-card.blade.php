@@ -10,7 +10,7 @@
                 alt="{{ $place->name }}"
                 class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105"
                 loading="lazy"
-                onerror="this.onerror=null; this.src='/images/placeholder.jpg';"
+                onerror="this.onerror=null; this.src='/images/placeholder.png';"
             >
             <button class="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white shadow-sm">
                 <svg

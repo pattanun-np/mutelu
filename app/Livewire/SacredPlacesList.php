@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Sacredplace;
+use App\Models\Tag;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\On;
@@ -41,18 +42,21 @@ class SacredPlacesList extends Component
         }
 
         $this->resetPage();
+        $this->dispatch('filtersUpdated');
     }
 
     public function clearFilters()
     {
         $this->activeFilters = [];
         $this->resetPage();
+        $this->dispatch('filtersUpdated');
     }
 
     public function filterChanged($filters)
     {
         $this->activeFilters = $filters;
         $this->resetPage();
+        $this->dispatch('filtersUpdated');
     }
 
     public function loadMore()
@@ -84,9 +88,15 @@ class SacredPlacesList extends Component
 
         // Apply filters if any are active
         if (!empty($this->activeFilters) && is_array($this->activeFilters)) {
-            $query->whereHas('tags', function ($q) {
-                $q->whereIn('name', $this->activeFilters);
-            });
+            $tagIds = Tag::whereIn('name', $this->activeFilters)->pluck('id')->toArray();
+
+            if (!empty($tagIds)) {
+                $query->where(function ($q) use ($tagIds) {
+                    foreach ($tagIds as $tagId) {
+                        $q->orWhereJsonContains('tag_ids', $tagId);
+                    }
+                });
+            }
         }
 
         // Prevent duplicates by using groupBy instead of distinct
@@ -96,10 +106,6 @@ class SacredPlacesList extends Component
         $sacredplaces = $query->paginate($this->perPage);
 
         $this->hasMorePages = $sacredplaces->hasMorePages();
-
-        // Don't set loadingMore to false here, as it will be set by the setLoadingMoreFalse method
-        // after a delay to prevent multiple load requests
-        // $this->loadingMore = false;
 
         return view('livewire.sacred-places-list', [
             'sacredplaces' => $sacredplaces

@@ -143,8 +143,7 @@ class Sacredplace extends Model implements HasMedia
         }
 
         // Create a relationship that filters tags based on the tag_ids array
-        return $this->hasMany(Tag::class, 'id', 'id')
-            ->whereIn('id', $this->tag_ids);
+        return Tag::whereIn('id', $this->tag_ids);
     }
 
     /**

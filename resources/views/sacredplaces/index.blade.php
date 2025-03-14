@@ -182,10 +182,10 @@
                 card.innerHTML = `
                     <a href="${placeUrl}" class="block h-full flex flex-col">
                         <div class="relative pt-[75%] overflow-hidden bg-gray-100 rounded-t-xl">
-                            <img src="${place.image || '/images/placeholder.jpg'}" 
-                                 alt="${place.name}" 
+                            <img src="${place.image || '/images/placeholder.png'}" 
+                                 alt="${place.name}"  
                                  class="absolute inset-0 w-full h-full object-cover transition duration-300 group-hover:scale-105"
-                                 onerror="this.onerror=null; this.src='/images/placeholder.jpg';">
+                                 onerror="this.onerror=null; this.src='/images/placeholder.png';">
                             <button class="absolute top-3 right-3 p-2 rounded-full bg-white/80 hover:bg-white shadow-sm">
                                 <svg class="h-5 w-5 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
