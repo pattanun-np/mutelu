@@ -17,6 +17,17 @@ class TagController extends Controller
     }
 
     /**
+     * Get all tags as JSON for API usage
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiIndex()
+    {
+        $tags = Tag::orderBy('name')->get();
+        return response()->json($tags);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

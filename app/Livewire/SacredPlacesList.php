@@ -17,6 +17,7 @@ class SacredPlacesList extends Component
     public $loadingMore = false;
     public $activeFilters = [];
     public $search = '';
+    public $tags = [];
 
     protected $listeners = ['loadMore', 'filterChanged', 'searchUpdated'];
 
@@ -31,6 +32,15 @@ class SacredPlacesList extends Component
         if ($search) {
             $this->search = $search;
         }
+
+        // Fetch tags from the API
+        $this->fetchTags();
+    }
+
+    public function fetchTags()
+    {
+        // Fetch tags from the API
+        $this->tags = Tag::orderBy('name')->get();
     }
 
     public function toggleFilter($filter)

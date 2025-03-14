@@ -7,8 +7,50 @@
     </div>
     @endif --}}
 
-    <!-- Filters bar -->
-  
+    <!-- Dynamic Tags Filter Section -->
+    <div
+        class="sticky top-16 z-10 bg-white border-b border-gray-200 py-4 mb-6 -mx-4 px-4 shadow-sm ">
+        <div class="flex items-center space-x-4 overflow-x-auto pb-2 scrollbar-hide w-full justify-around">
+            <button
+                data-filter="all"
+                class="filter-button bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-medium  text-nowrap"
+            >
+                All Results
+            </button>
+            @foreach($tags as $tag)
+                <button
+                    data-filter="{{ $tag->name }}"
+                    class="filter-button bg-white text-gray-800 hover:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 text-nowrap"
+                >
+                    {{ $tag->name }}
+                </button>
+            @endforeach
+
+        </div>
+        <button
+            id="clear-filters"
+            class="filter-button bg-white text-gray-800 hover:bg-gray-100 px-4 py-2 rounded-full text-sm font-medium border border-gray-200 flex items-center text-nowrap"
+        >
+            <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                ></path>
+            </svg>
+            Clear Filters
+            <span
+                id="active-filters-count"
+                class="ml-2 bg-rose-500 text-white text-xs rounded-full w-5 h-5  items-center justify-center hidden  p-0.5"
+            >0</span>
+        </button>
+        </div>
 
     <!-- Grid layout -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[300px]">
@@ -194,7 +236,7 @@
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const filter = button.getAttribute('data-filter');
-                
+
                 if (filter === 'all') {
                     @this.clearFilters();
                 } else {

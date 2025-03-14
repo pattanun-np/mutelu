@@ -11,6 +11,7 @@ use App\Models\Sacredplace;
 Route::get('/', [SacredplaceController::class, 'index'])->name('home');
 
 Route::get('/api/sacredplaces', [SacredplaceController::class, 'apiIndex'])->name('api.sacredplaces');
+Route::get('/api/tags', [TagController::class, 'apiIndex'])->name('api.tags');
 
 // CRUD routes for sacred places
 Route::resource('sacredplaces', SacredplaceController::class);
