@@ -6,6 +6,7 @@ use App\Models\Sacredplace;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class SacredplaceController extends Controller
 {
@@ -219,10 +220,22 @@ class SacredplaceController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to delete a sacred place.');
         }
 
-        // Delete the sacred place (will cascade to related records including media)
-        $sacredplace->delete();
+        try {
+            // First, delete all related reviews
+            $sacredplace->reviews()->delete();
 
-        return redirect()->route('home')
-            ->with('success', 'Sacred place deleted successfully.');
+            // Delete the sacred place (will cascade to related records including media)
+            $sacredplace->delete();
+
+            return redirect()->route('home')
+                ->with('success', 'Sacred place deleted successfully.');
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error deleting sacred place: ' . $e->getMessage());
+
+            // Return with error message
+            return redirect()->back()
+                ->with('error', 'Error deleting sacred place: ' . $e->getMessage());
+        }
     }
 }

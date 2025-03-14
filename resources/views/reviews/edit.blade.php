@@ -110,7 +110,7 @@
                         </a>
                         <button 
                             type="submit" 
-                            class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors"
+                            class="bg-black text-white font-medium py-2 px-4 rounded-lg shadow-sm transition-colors"
                         >
                             Update Review
                         </button>
