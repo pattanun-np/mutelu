@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Migration for the media table used by Spatie's MediaLibrary package
+ */
 return new class extends Migration
 {
     public function up(): void

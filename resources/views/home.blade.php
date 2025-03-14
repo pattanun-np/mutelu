@@ -13,45 +13,7 @@
                     <p class="text-xl text-gray-700 mb-8">Find spiritual destinations and connect with
                         sacred sites around the world</p>
 
-                    <!-- Search Bar -->
-                    <div class="relative max-w-2xl mx-auto">
-                        <form
-                            action="{{ route('sacredplaces.index') }}"
-                            method="GET"
-                            class="flex items-center"
-                        >
-                            <div class="relative flex-grow">
-                                <input
-                                    type="text"
-                                    name="search"
-                                    placeholder="Search sacred places..."
-                                    class="w-full py-4 pl-5 pr-12 text-gray-900 bg-white rounded-l-full border-0 shadow-lg focus:ring-2 focus:ring-rose-500 focus:outline-none"
-                                >
-                                <div
-                                    class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg
-                                        class="w-5 h-5 text-gray-400"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                        ></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <button
-                                type="submit"
-                                class="bg-rose-500 hover:bg-rose-600 text-white py-4 px-6 rounded-r-full shadow-lg transition-colors"
-                            >
-                                Search
-                            </button>
-                        </form>
-                    </div>
+                   
                 </div>
             </div>
 
@@ -139,14 +101,7 @@
 
         <!-- Main Content -->
         <div class="container mx-auto px-4 py-8">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">Sacred Places</h2>
-                <a href="{{ route('sacredplaces.create') }}"
-                    class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg shadow-sm transition-colors"
-                >
-                    Add New Place
-                    </a>
-                    </div>
+          
 
             <!-- Sacred Places List -->
             <div>

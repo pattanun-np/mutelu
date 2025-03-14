@@ -1,57 +1,6 @@
 <div class="w-full">
     <!-- Filters bar -->
-    <div
-        class="sticky top-0 bg-white py-4 z-10 flex overflow-x-auto gap-3 scrollbar-hide mb-6 border-b border-gray-200">
-        <button
-            wire:click="clearFilters"
-            class="filter-pill {{ empty($activeFilters) || !is_array($activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="all"
-        >
-            All Places
-        </button>
-        <button
-            wire:click="toggleFilter('temple')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('temple', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="temple"
-        >
-            Temples
-        </button>
-        <button
-            wire:click="toggleFilter('church')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('church', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="church"
-        >
-            Churches
-        </button>
-        <button
-            wire:click="toggleFilter('mosque')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('mosque', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="mosque"
-        >
-            Mosques
-        </button>
-        <button
-            wire:click="toggleFilter('shrine')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('shrine', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="shrine"
-        >
-            Shrines
-        </button>
-        <button
-            wire:click="toggleFilter('historical')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('historical', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="historical"
-        >
-            Historical
-        </button>
-        <button
-            wire:click="toggleFilter('natural')"
-            class="filter-pill {{ is_array($activeFilters) && in_array('natural', $activeFilters) ? 'bg-gray-800 text-white' : 'bg-gray-100' }}"
-            data-category="natural"
-        >
-            Natural
-        </button>
-    </div>
+  
 
     <!-- Grid layout -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[300px]">
